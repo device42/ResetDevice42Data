@@ -168,6 +168,13 @@ def main():
         print 'Cancelled'
         sys.exit()
     if args.devices:
+      if print_warning("devices"):
+        print '\n Deleting Subnets'
+        w.delete_devices()
+      else:
+        print 'Cancelled'
+        sys.exit()
+    if args.all:
       if print_warning("EVERYTHING"):
         print '\n DELETING EVERYTHING ...'
         w.delete_racks()
