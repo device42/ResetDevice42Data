@@ -169,7 +169,7 @@ def main():
         sys.exit()
     if args.devices:
       if print_warning("devices"):
-        print '\n Deleting Subnets'
+        print '\n Deleting Devices'
         w.delete_devices()
       else:
         print 'Cancelled'
