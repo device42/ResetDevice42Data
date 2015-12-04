@@ -1,6 +1,7 @@
 import sys
 import requests
 import base64
+import argparse
 
 try:
     requests.packages.urllib3.disable_warnings()
@@ -116,15 +117,75 @@ class Wipe():
             r = requests.delete(url, headers=self.headers, verify=False)
             i+=1
 
-
+def print_warning(section):
+    print '\n'
+    print '!!! WARNING !!!\n'
+    print "This WILL Delete all of your %s\n" % (section)
+    print '!!! WARNING !!!\n'
+    response = raw_input("Please Type 'YES' to confirm deletion: ")
+    if response == 'YES':
+      return True
+    else:
+      return False
 
 def main():
     w = Wipe()
-    w.delete_racks()
-    w.delete_buildings()
-    w.delete_pdus()
-    w.delete_subnets()
-    w.delete_devices()
+    parser = argparse.ArgumentParser(prog="deleter")
+    parser.add_argument('-r', '--racks', action="store_true", help='Delete all Racks')
+    parser.add_argument('-b', '--buildings', action="store_true", help='Delete all Buildings')
+    parser.add_argument('-p', '--pdus', action="store_true", help='Delete all PDUs')
+    parser.add_argument('-s', '--subnets', action="store_true", help='Delete all subnets')
+    parser.add_argument('-d', '--devices', action="store_true", help='Delete all Devices')
+    parser.add_argument('-a', '--all', action="store_true", help='Delete EVERYTHING')
+    args = parser.parse_args()
+    
+    if args.racks:
+      if print_warning("racks"):
+        print '\n Deleting Racks ...'
+        w.delete_racks()
+      else:
+        print 'Cancelled'
+        sys.exit()
+    if args.buildings:
+      if print_warning("buildings"):
+        print '\n Deleting Buildings'
+        w.delete_buildings()
+      else:
+        print 'Cancelled'
+        sys.exit()
+    if args.pdus:
+      if print_warning("pdus"):
+        print '\n Deleting PDUs'
+        w.delete_pdus()
+      else:
+        print 'Cancelled'
+        sys.exit()
+    if args.subnets:
+      if print_warning("subnets"):
+        print '\n Deleting Subnets'
+        w.delete_subnets()
+      else:
+        print 'Cancelled'
+        sys.exit()
+    if args.devices:
+      if print_warning("devices"):
+        print '\n Deleting Devices'
+        w.delete_devices()
+      else:
+        print 'Cancelled'
+        sys.exit()
+    if args.all:
+      if print_warning("EVERYTHING"):
+        print '\n DELETING EVERYTHING ...'
+        w.delete_racks()
+        w.delete_buildings()
+        w.delete_pdus()
+        w.delete_subnets()
+        w.delete_devices()
+      else:
+        print 'Cancelled'
+        sys.exit() 
+
 
 
 
