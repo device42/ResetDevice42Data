@@ -76,7 +76,6 @@ class Wipe():
             url = D42_URL + f
             r = requests.delete(url, headers=self.headers, verify=False)
 
-
     def delete_subnets(self):
         """
         Deletes subnets and IPs as well
@@ -117,6 +116,46 @@ class Wipe():
             r = requests.delete(url, headers=self.headers, verify=False)
             i+=1
 
+    def delete_assets(self):
+        """
+        Deleting assets one at the time. Very slow!
+        :return:
+        """
+        print '\n[!] Deleting assets'
+        f = '/api/1.0/assets/'
+        url = D42_URL+f
+        response = requests.get(url,headers=self.headers, verify=False)
+        raw = response.json()
+        assets = [x['asset_id'] for x in raw['assets']]
+        total = len(assets)
+        i = 1
+        for asset in assets:
+            print '\t[-] Asset ID: %s [%d of %d]' % (asset, i, total)
+            f = '/api/1.0/assets/%s/' % asset
+            url = D42_URL + f
+            r = requests.delete(url, headers=self.headers, verify=False)
+            i+=1
+
+    def delete_hardwares(self):
+        """
+        Deleting hardwares one at the time. Very slow!
+        :return:
+        """
+        print '\n[!] Deleting hardwares'
+        f = '/api/1.0/hardwares/'
+        url = D42_URL+f
+        response = requests.get(url,headers=self.headers, verify=False)
+        raw = response.json()
+        hardwares = [x['hardware_id'] for x in raw['models']]
+        total = len(hardwares)
+        i = 1
+        for hardware in hardwares:
+            print '\t[-] Hardware ID: %s [%d of %d]' % (hardware, i, total)
+            f = '/api/1.0/hardwares/%s/' % hardware
+            url = D42_URL + f
+            r = requests.delete(url, headers=self.headers, verify=False)
+            i+=1
+
 def print_warning(section):
     print '\n'
     print '!!! WARNING !!!\n'
@@ -127,6 +166,10 @@ def print_warning(section):
       return True
     else:
       return False
+    
+def cancel():
+    print '\nCancelled'
+    sys.exit()
 
 def main():
     w = Wipe()
@@ -134,59 +177,70 @@ def main():
     parser.add_argument('-r', '--racks', action="store_true", help='Delete all Racks')
     parser.add_argument('-b', '--buildings', action="store_true", help='Delete all Buildings')
     parser.add_argument('-p', '--pdus', action="store_true", help='Delete all PDUs')
-    parser.add_argument('-s', '--subnets', action="store_true", help='Delete all subnets')
+    parser.add_argument('-s', '--subnets', action="store_true", help='Delete all Subnets')
     parser.add_argument('-d', '--devices', action="store_true", help='Delete all Devices')
+    parser.add_argument('-i', '--assets', action="store_true", help='Delete all Assets')
+    parser.add_argument('-w', '--hardwares', action="store_true", help='Delete all Hardwares')
     parser.add_argument('-a', '--all', action="store_true", help='Delete EVERYTHING')
     args = parser.parse_args()
-    
-    if args.racks:
-      if print_warning("racks"):
-        print '\n Deleting Racks ...'
-        w.delete_racks()
-      else:
-        print 'Cancelled'
-        sys.exit()
-    if args.buildings:
-      if print_warning("buildings"):
-        print '\n Deleting Buildings'
-        w.delete_buildings()
-      else:
-        print 'Cancelled'
-        sys.exit()
-    if args.pdus:
-      if print_warning("pdus"):
-        print '\n Deleting PDUs'
-        w.delete_pdus()
-      else:
-        print 'Cancelled'
-        sys.exit()
-    if args.subnets:
-      if print_warning("subnets"):
-        print '\n Deleting Subnets'
-        w.delete_subnets()
-      else:
-        print 'Cancelled'
-        sys.exit()
-    if args.devices:
-      if print_warning("devices"):
-        print '\n Deleting Devices'
-        w.delete_devices()
-      else:
-        print 'Cancelled'
-        sys.exit()
-    if args.all:
-      if print_warning("EVERYTHING"):
-        print '\n DELETING EVERYTHING ...'
-        w.delete_racks()
-        w.delete_buildings()
-        w.delete_pdus()
-        w.delete_subnets()
-        w.delete_devices()
-      else:
-        print 'Cancelled'
-        sys.exit() 
 
-
+    if len(sys.argv) == 1:
+        print parser.print_help()
+    else:
+        if args.racks:
+            if print_warning("racks"):
+                print '\n Deleting Racks ...'
+                w.delete_racks()
+            else:
+                cancel()
+        if args.buildings:
+            if print_warning("buildings"):
+                print '\n Deleting Buildings'
+                w.delete_buildings()
+            else:
+                cancel()
+        if args.pdus:
+            if print_warning("pdus"):
+                print '\n Deleting PDUs'
+                w.delete_pdus()
+            else:
+                cancel()
+        if args.subnets:
+            if print_warning("subnets"):
+                print '\n Deleting Subnets'
+                w.delete_subnets()
+            else:
+                cancel()
+        if args.devices:
+            if print_warning("devices"):
+                print '\n Deleting Devices'
+                w.delete_devices()
+            else:
+                cancel()
+        if args.assets:
+            if print_warning("assets"):
+                print '\n Deleting Assets'
+                w.delete_assets()
+            else:
+                cancel()
+        if args.hardwares:
+            if print_warning("hardwares"):
+                print '\n Deleting hardwares'
+                w.delete_hardwares()
+            else:
+                cancel()
+        if args.all:
+            if print_warning("EVERYTHING"):
+                print '\n DELETING EVERYTHING ...'
+                w.delete_racks()
+                w.delete_buildings()
+                w.delete_pdus()
+                w.delete_subnets()
+                w.delete_devices()
+                w.delete_assets()
+                w.delete_hardwares()
+            else:
+                cancel()
 
 
 if __name__ == '__main__':
