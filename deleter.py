@@ -8,9 +8,9 @@ try:
 except:
     pass
 
-D42_USER    = 'admin'
-D42_PWD     = 'adm!nd42'
-D42_URL     = 'https://192.168.118.129'
+D42_USER    = ''
+D42_PWD     = ''
+D42_URL     = ''
 
 
 class Wipe():
@@ -156,6 +156,46 @@ class Wipe():
             r = requests.delete(url, headers=self.headers, verify=False)
             i+=1
 
+    def delete_macs(self):
+        """
+        Deleting macs one at the time. Very slow!
+        :return:
+        """
+        print '\n[!] Deleting MACs'
+        f = '/api/1.0/macs/'
+        url = D42_URL+f
+        response = requests.get(url,headers=self.headers, verify=False)
+        raw = response.json()
+        macs = [x['macaddress_id'] for x in raw['macaddresses']]
+        total = len(macs)
+        i = 1
+        for mac in macs:
+            print '\t[-] MAC ID: %s [%d of %d]' % (mac, i, total)
+            f = '/api/1.0/macs/%s/' % mac
+            url = D42_URL + f
+            r = requests.delete(url, headers=self.headers, verify=False)
+            i+=1
+
+    def delete_vlans(self):
+        """
+        Deleting VLANs one at the time. Very slow!
+        :return:
+        """
+        print '\n[!] Deleting VLANs'
+        f = '/api/1.0/vlans/'
+        url = D42_URL+f
+        response = requests.get(url,headers=self.headers, verify=False)
+        raw = response.json()
+        vlans = [x['vlan_id'] for x in raw['vlans']]
+        total = len(vlans)
+        i = 1
+        for vlan in vlans:
+            print '\t[-] VLAN ID: %s [%d of %d]' % (vlan, i, total)
+            f = '/api/1.0/vlans/%s/' % vlan
+            url = D42_URL + f
+            r = requests.delete(url, headers=self.headers, verify=False)
+            i+=1
+
 def print_warning(section):
     print '\n'
     print '!!! WARNING !!!\n'
@@ -181,6 +221,8 @@ def main():
     parser.add_argument('-d', '--devices', action="store_true", help='Delete all Devices')
     parser.add_argument('-i', '--assets', action="store_true", help='Delete all Assets')
     parser.add_argument('-w', '--hardwares', action="store_true", help='Delete all Hardwares')
+    parser.add_argument('-m', '--macs', action="store_true", help='Delete all MACs')
+    parser.add_argument('-v', '--vlans', action="store_true", help='Delete all VLANs')
     parser.add_argument('-a', '--all', action="store_true", help='Delete EVERYTHING')
     args = parser.parse_args()
 
@@ -229,6 +271,18 @@ def main():
                 w.delete_hardwares()
             else:
                 cancel()
+        if args.macs:
+            if print_warning("MACs"):
+                print '\n Deleting MACs'
+                w.delete_macs()
+            else:
+                cancel()
+        if args.vlans:
+            if print_warning("VLANs"):
+                print '\n Deleting VLANs'
+                w.delete_vlans()
+            else:
+                cancel()
         if args.all:
             if print_warning("EVERYTHING"):
                 print '\n DELETING EVERYTHING ...'
@@ -236,6 +290,8 @@ def main():
                 w.delete_buildings()
                 w.delete_pdus()
                 w.delete_subnets()
+                w.delete_macs()
+                w.delete_vlans()
                 w.delete_devices()
                 w.delete_assets()
                 w.delete_hardwares()
@@ -245,5 +301,5 @@ def main():
 
 if __name__ == '__main__':
     main()
-    print '\n[!] Done!'
+    print '\n[!] Done!\n\n'
     sys.exit()
