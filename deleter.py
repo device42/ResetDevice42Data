@@ -8,9 +8,9 @@ try:
 except:
     pass
 
-D42_USER    = ''
-D42_PWD     = ''
-D42_URL     = ''
+D42_USER    = 'admin'
+D42_PWD     = 'adm!nd42'
+D42_URL     = 'https://192.168.3.30'
 
 
 class Wipe():
@@ -196,6 +196,27 @@ class Wipe():
             r = requests.delete(url, headers=self.headers, verify=False)
             i+=1
 
+    def delete_parts(self):
+        """
+        Deleting parts one at the time. Very slow!
+        :return:
+        """
+        print '\n[!] Deleting parts'
+        f = '/api/1.0/parts/'
+        url = D42_URL+f
+        response = requests.get(url,headers=self.headers, verify=False)
+        raw = response.json()
+        parts = [x['part_id'] for x in raw['parts']]
+        total = len(parts)
+        i = 1
+        for part in parts:
+            print '\t[-] Part ID: %s [%d of %d]' % (part, i, total)
+            f = '/api/1.0/parts/%s/' % part
+            url = D42_URL + f
+            r = requests.delete(url, headers=self.headers, verify=False)
+            i+=1
+
+
 def print_warning(section):
     print '\n'
     print '!!! WARNING !!!\n'
@@ -223,6 +244,7 @@ def main():
     parser.add_argument('-w', '--hardwares', action="store_true", help='Delete all Hardwares')
     parser.add_argument('-m', '--macs', action="store_true", help='Delete all MACs')
     parser.add_argument('-v', '--vlans', action="store_true", help='Delete all VLANs')
+    parser.add_argument('-t', '--parts', action="store_true", help='Delete all parts')
     parser.add_argument('-a', '--all', action="store_true", help='Delete EVERYTHING')
     args = parser.parse_args()
 
@@ -283,6 +305,12 @@ def main():
                 w.delete_vlans()
             else:
                 cancel()
+        if args.parts:
+            if print_warning("parts"):
+                print '\n Deleting parts'
+                w.delete_parts()
+            else:
+                cancel()
         if args.all:
             if print_warning("EVERYTHING"):
                 print '\n DELETING EVERYTHING ...'
@@ -295,6 +323,7 @@ def main():
                 w.delete_devices()
                 w.delete_assets()
                 w.delete_hardwares()
+                w.delete_parts()
             else:
                 cancel()
 
