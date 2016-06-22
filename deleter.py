@@ -20,98 +20,142 @@ class Wipe():
             'Content-Type': 'application/x-www-form-urlencoded'
         }
 
-    def delete_racks(self):
-        """
-        Deletes racks
-        :return:
-        """
-        print '\n[!] Deleting racks'
-        f = '/api/1.0/racks/'
-        url = D42_URL+f
-        response = requests.get(url,headers=self.headers, verify=False)
-        raw = response.json()
-        racks = [x['rack_id'] for x in raw['racks']]
-
-        for rack in racks:
-            print '\t[-] Rack ID: %s' % rack
-            f = '/api/1.0/racks/%s/' % rack
-            url = D42_URL + f
-            r = requests.delete(url, headers=self.headers, verify=False)
-
-    def delete_buildings(self):
-        """
-        Deletes buildings and rooms as well
-        :return:
-        """
-        print '\n[!] Deleting buildings'
-        f = '/api/1.0/buildings/'
-        url = D42_URL+f
-        response = requests.get(url,headers=self.headers, verify=False)
+    def get(self, url, id_name, name):
+        url = D42_URL + url
+        response = requests.get(url, headers=self.headers, verify=False)
         raw = response.json()
 
-        buildings = [x['building_id'] for x in raw['buildings']]
-
-        for building in buildings:
-            print '\t[-] Building ID: %s' % building
-            f = '/api/1.0/buildings/%s/' % building
-            url = D42_URL + f
-            r = requests.delete(url, headers=self.headers, verify=False)
-
-    def delete_pdus(self):
-        """
-        Deletes PDUs, but it does not delete PDU models
-        :return:
-        """
-        print '\n[!] Deleting pdus'
-        f = '/api/1.0/pdus/'
-        url = D42_URL+f
-        response = requests.get(url,headers=self.headers, verify=False)
-        raw = response.json()
-
-        pdus = [x['pdu_id'] for x in raw['pdus']]
-
-        for pdu in pdus:
-            print '\t[-] PDU ID: %s' % pdu
-            f = '/api/1.0/pdus/%s/' % pdu
-            url = D42_URL + f
-            r = requests.delete(url, headers=self.headers, verify=False)
-
-    def delete_subnets(self):
-        """
-        Deletes subnets and IPs as well
-        :return:
-        """
-        print '\n[!] Deleting subnets'
-        f = '/api/1.0/subnets/'
-        url = D42_URL+f
-        response = requests.get(url,headers=self.headers, verify=False)
-        raw = response.json()
-
-        subnets = [x['subnet_id'] for x in raw['subnets']]
-
-        for subnet in subnets:
-            print '\t[-] Subnet ID: %s' % subnet
-            f = '/api/1.0/subnets/%s/' % subnet
-            url = D42_URL + f
-            r = requests.delete(url, headers=self.headers, verify=False)
+        ids = [x[id_name] for x in raw[name]]
+        offset = limit = total = 0
+        if raw.has_key('offset'):
+            offset = raw['offset']
+        if raw.has_key('limit'):
+            limit = raw['limit']
+        if raw.has_key('total_count'):
+            total = raw['total_count']
+        return ids, offset, limit, total
 
     def delete_devices(self):
         """
         Deleting device one at the time. Very slow!
         :return:
         """
+        all_ids = []
+        offset = 0
         print '\n[!] Deleting devices'
-        f = '/api/1.0/devices/'
-        url = D42_URL+f
-        response = requests.get(url,headers=self.headers, verify=False)
-        raw = response.json()
+        while 1:
+            url = '/api/1.0/devices/?offset=%s' % offset
+            ids, offset, limit, total_count = self.get(url, 'device_id', 'Devices')
+            all_ids.extend(ids)
+            offset  += limit
+            if offset >= total_count:
+                break
 
-        devices = [x['device_id'] for x in raw['Devices']]
-        total = len(devices)
+        total = len(all_ids)
         i = 1
-        for device in devices:
-            print '\t[-] Device ID: %s [%d of %d]' % (device, i, total)
-            f = '/api/1.0/devices/%s/' % device
+        for obj_id in all_ids:
+            print '\t[-] Device ID: %s [%d of %d]' % (obj_id, i, total)
+            f = '/api/1.0/devices/%s/' % obj_id
+            url = D42_URL + f
+            r = requests.delete(url, headers=self.headers, verify=False)
+            i+=1
+
+    def delete_racks(self):
+        """
+        Deletes racks
+        :return:
+        """
+        all_ids = []
+        offset = 0
+        print '\n[!] Deleting racks'
+        while 1:
+            url = '/api/1.0/racks/?offset=%s' % offset
+            ids, offset, limit, total_count = self.get(url, 'rack_id', 'racks')
+            all_ids.extend(ids)
+            offset  += limit
+            if offset >= total_count:
+                break
+
+        total = len(all_ids)
+        i = 1
+        for obj_id in all_ids:
+            print '\t[-] Rack ID: %s [%d of %d]' % (obj_id, i, total)
+            f = '/api/1.0/racks/%s/' % obj_id
+            url = D42_URL + f
+            r = requests.delete(url, headers=self.headers, verify=False)
+            i+=1
+
+    def delete_buildings(self):
+        """
+        Deletes buildings and rooms as well
+        :return:
+        """
+        all_ids = []
+        offset = 0
+        print '\n[!] Deleting buildings'
+        while 1:
+            url = '/api/1.0/buildings/?offset=%s' % offset
+            ids, offset, limit, total_count = self.get(url, 'building_id', 'buildings')
+            all_ids.extend(ids)
+            offset  += limit
+            if offset >= total_count:
+                break
+
+        total = len(all_ids)
+        i = 1
+        for obj_id in all_ids:
+            print '\t[-] Building ID: %s [%d of %d]' % (obj_id, i, total)
+            f = '/api/1.0/buildings/%s/' % obj_id
+            url = D42_URL + f
+            r = requests.delete(url, headers=self.headers, verify=False)
+            i+=1
+
+    def delete_pdus(self):
+        """
+        Deletes PDUs, but it does not delete PDU models
+        :return:
+        """
+        all_ids = []
+        offset = 0
+        print '\n[!] Deleting PDUs'
+        while 1:
+            url = '/api/1.0/pdus/?offset=%s' % offset
+            ids, offset, limit, total_count = self.get(url, 'pdu_id', 'pdus')
+            all_ids.extend(ids)
+            offset  += limit
+            if offset >= total_count:
+                break
+
+        total = len(all_ids)
+        i = 1
+        for obj_id in all_ids:
+            print '\t[-] PDU ID: %s [%d of %d]' % (obj_id, i, total)
+            f = '/api/1.0/pdus/%s/' % obj_id
+            url = D42_URL + f
+            r = requests.delete(url, headers=self.headers, verify=False)
+            i+=1
+
+    def delete_subnets(self):
+        """
+        Deletes subnets and IPs as well
+        :return:
+        """
+        all_ids = []
+        offset = 0
+        print '\n[!] Deleting subnets'
+        while 1:
+            url = '/api/1.0/subnets/?offset=%s' % offset
+            ids, offset, limit, total_count = self.get(url, 'subnet_id', 'subnets')
+            all_ids.extend(ids)
+            offset  += limit
+            if offset >= total_count:
+                break
+
+        total = len(all_ids)
+        i = 1
+        for obj_id in all_ids:
+            print '\t[-] Subnet ID: %s [%d of %d]' % (obj_id, i, total)
+            f = '/api/1.0/subnets/%s/' % obj_id
             url = D42_URL + f
             r = requests.delete(url, headers=self.headers, verify=False)
             i+=1
@@ -121,17 +165,22 @@ class Wipe():
         Deleting assets one at the time. Very slow!
         :return:
         """
+        all_ids = []
+        offset = 0
         print '\n[!] Deleting assets'
-        f = '/api/1.0/assets/'
-        url = D42_URL+f
-        response = requests.get(url,headers=self.headers, verify=False)
-        raw = response.json()
-        assets = [x['asset_id'] for x in raw['assets']]
-        total = len(assets)
+        while 1:
+            url = '/api/1.0/assets/?offset=%s' % offset
+            ids, offset, limit, total_count = self.get(url, 'asset_id', 'assets')
+            all_ids.extend(ids)
+            offset  += limit
+            if offset >= total_count:
+                break
+
+        total = len(all_ids)
         i = 1
-        for asset in assets:
-            print '\t[-] Asset ID: %s [%d of %d]' % (asset, i, total)
-            f = '/api/1.0/assets/%s/' % asset
+        for obj_id in all_ids:
+            print '\t[-] Asset ID: %s [%d of %d]' % (obj_id, i, total)
+            f = '/api/1.0/assets/%s/' % obj_id
             url = D42_URL + f
             r = requests.delete(url, headers=self.headers, verify=False)
             i+=1
@@ -141,17 +190,22 @@ class Wipe():
         Deleting hardwares one at the time. Very slow!
         :return:
         """
+        all_ids = []
+        offset = 0
         print '\n[!] Deleting hardwares'
-        f = '/api/1.0/hardwares/'
-        url = D42_URL+f
-        response = requests.get(url,headers=self.headers, verify=False)
-        raw = response.json()
-        hardwares = [x['hardware_id'] for x in raw['models']]
-        total = len(hardwares)
+        while 1:
+            url = '/api/1.0/hardwares/?offset=%s' % offset
+            ids, offset, limit, total_count = self.get(url, 'hardware_id', 'models')
+            all_ids.extend(ids)
+            offset  += limit
+            if offset >= total_count:
+                break
+
+        total = len(all_ids)
         i = 1
-        for hardware in hardwares:
-            print '\t[-] Hardware ID: %s [%d of %d]' % (hardware, i, total)
-            f = '/api/1.0/hardwares/%s/' % hardware
+        for obj_id in all_ids:
+            print '\t[-] Hardware ID: %s [%d of %d]' % (obj_id, i, total)
+            f = '/api/1.0/hardwares/%s/' % obj_id
             url = D42_URL + f
             r = requests.delete(url, headers=self.headers, verify=False)
             i+=1
@@ -161,17 +215,22 @@ class Wipe():
         Deleting macs one at the time. Very slow!
         :return:
         """
+        all_ids = []
+        offset = 0
         print '\n[!] Deleting MACs'
-        f = '/api/1.0/macs/'
-        url = D42_URL+f
-        response = requests.get(url,headers=self.headers, verify=False)
-        raw = response.json()
-        macs = [x['macaddress_id'] for x in raw['macaddresses']]
-        total = len(macs)
+        while 1:
+            url = '/api/1.0/macs/?offset=%s' % offset
+            ids, offset, limit, total_count = self.get(url, 'macaddress_id', 'macaddresses')
+            all_ids.extend(ids)
+            offset  += limit
+            if offset >= total_count:
+                break
+
+        total = len(all_ids)
         i = 1
-        for mac in macs:
-            print '\t[-] MAC ID: %s [%d of %d]' % (mac, i, total)
-            f = '/api/1.0/macs/%s/' % mac
+        for obj_id in all_ids:
+            print '\t[-] MAC ID: %s [%d of %d]' % (obj_id, i, total)
+            f = '/api/1.0/macs/%s/' % obj_id
             url = D42_URL + f
             r = requests.delete(url, headers=self.headers, verify=False)
             i+=1
@@ -181,17 +240,22 @@ class Wipe():
         Deleting VLANs one at the time. Very slow!
         :return:
         """
+        all_ids = []
+        offset = 0
         print '\n[!] Deleting VLANs'
-        f = '/api/1.0/vlans/'
-        url = D42_URL+f
-        response = requests.get(url,headers=self.headers, verify=False)
-        raw = response.json()
-        vlans = [x['vlan_id'] for x in raw['vlans']]
-        total = len(vlans)
+        while 1:
+            url = '/api/1.0/vlans/?offset=%s' % offset
+            ids, offset, limit, total_count = self.get(url, 'vlan_id', 'vlans')
+            all_ids.extend(ids)
+            offset  += limit
+            if offset >= total_count:
+                break
+
+        total = len(all_ids)
         i = 1
-        for vlan in vlans:
-            print '\t[-] VLAN ID: %s [%d of %d]' % (vlan, i, total)
-            f = '/api/1.0/vlans/%s/' % vlan
+        for obj_id in all_ids:
+            print '\t[-] VLAN ID: %s [%d of %d]' % (obj_id, i, total)
+            f = '/api/1.0/vlans/%s/' % obj_id
             url = D42_URL + f
             r = requests.delete(url, headers=self.headers, verify=False)
             i+=1
@@ -201,17 +265,22 @@ class Wipe():
         Deleting parts one at the time. Very slow!
         :return:
         """
+        all_ids = []
+        offset = 0
         print '\n[!] Deleting parts'
-        f = '/api/1.0/parts/'
-        url = D42_URL+f
-        response = requests.get(url,headers=self.headers, verify=False)
-        raw = response.json()
-        parts = [x['part_id'] for x in raw['parts']]
-        total = len(parts)
+        while 1:
+            url = '/api/1.0/parts/?offset=%s' % offset
+            ids, offset, limit, total_count = self.get(url, 'part_id', 'parts')
+            all_ids.extend(ids)
+            offset  += limit
+            if offset >= total_count:
+                break
+
+        total = len(all_ids)
         i = 1
-        for part in parts:
-            print '\t[-] Part ID: %s [%d of %d]' % (part, i, total)
-            f = '/api/1.0/parts/%s/' % part
+        for obj_id in all_ids:
+            print '\t[-] Part ID: %s [%d of %d]' % (obj_id, i, total)
+            f = '/api/1.0/parts/%s/' % obj_id
             url = D42_URL + f
             r = requests.delete(url, headers=self.headers, verify=False)
             i+=1
@@ -318,11 +387,11 @@ def main():
                 w.delete_buildings()
                 w.delete_pdus()
                 w.delete_subnets()
-                w.delete_macs()
-                w.delete_vlans()
                 w.delete_devices()
                 w.delete_assets()
                 w.delete_hardwares()
+                w.delete_macs()
+                w.delete_vlans()
                 w.delete_parts()
             else:
                 cancel()
