@@ -8,9 +8,9 @@ try:
 except:
     pass
 
-D42_USER    = 'admin'
-D42_PWD     = 'adm!nd42'
-D42_URL     = 'https://192.168.3.30'
+D42_USER = 'admin'
+D42_PWD = 'adm!nd42'
+D42_URL = 'https://10.10.0.32'
 
 
 class Wipe():
@@ -27,11 +27,11 @@ class Wipe():
 
         ids = [x[id_name] for x in raw[name]]
         offset = limit = total = 0
-        if raw.has_key('offset'):
+        if 'offset' in raw:
             offset = raw['offset']
-        if raw.has_key('limit'):
+        if 'limit' in raw:
             limit = raw['limit']
-        if raw.has_key('total_count'):
+        if 'total_count' in raw:
             total = raw['total_count']
         return ids, offset, limit, total
 
@@ -47,7 +47,7 @@ class Wipe():
             url = '/api/1.0/devices/?offset=%s' % offset
             ids, offset, limit, total_count = self.get(url, 'device_id', 'Devices')
             all_ids.extend(ids)
-            offset  += limit
+            offset += limit
             if offset >= total_count:
                 break
 
@@ -58,7 +58,7 @@ class Wipe():
             f = '/api/1.0/devices/%s/' % obj_id
             url = D42_URL + f
             r = requests.delete(url, headers=self.headers, verify=False)
-            i+=1
+            i += 1
 
     def delete_racks(self):
         """
@@ -72,7 +72,7 @@ class Wipe():
             url = '/api/1.0/racks/?offset=%s' % offset
             ids, offset, limit, total_count = self.get(url, 'rack_id', 'racks')
             all_ids.extend(ids)
-            offset  += limit
+            offset += limit
             if offset >= total_count:
                 break
 
@@ -83,7 +83,7 @@ class Wipe():
             f = '/api/1.0/racks/%s/' % obj_id
             url = D42_URL + f
             r = requests.delete(url, headers=self.headers, verify=False)
-            i+=1
+            i += 1
 
     def delete_buildings(self):
         """
@@ -97,7 +97,7 @@ class Wipe():
             url = '/api/1.0/buildings/?offset=%s' % offset
             ids, offset, limit, total_count = self.get(url, 'building_id', 'buildings')
             all_ids.extend(ids)
-            offset  += limit
+            offset += limit
             if offset >= total_count:
                 break
 
@@ -108,7 +108,7 @@ class Wipe():
             f = '/api/1.0/buildings/%s/' % obj_id
             url = D42_URL + f
             r = requests.delete(url, headers=self.headers, verify=False)
-            i+=1
+            i += 1
 
     def delete_pdus(self):
         """
@@ -122,7 +122,7 @@ class Wipe():
             url = '/api/1.0/pdus/?offset=%s' % offset
             ids, offset, limit, total_count = self.get(url, 'pdu_id', 'pdus')
             all_ids.extend(ids)
-            offset  += limit
+            offset += limit
             if offset >= total_count:
                 break
 
@@ -133,7 +133,7 @@ class Wipe():
             f = '/api/1.0/pdus/%s/' % obj_id
             url = D42_URL + f
             r = requests.delete(url, headers=self.headers, verify=False)
-            i+=1
+            i += 1
 
     def delete_subnets(self):
         """
@@ -147,7 +147,7 @@ class Wipe():
             url = '/api/1.0/subnets/?offset=%s' % offset
             ids, offset, limit, total_count = self.get(url, 'subnet_id', 'subnets')
             all_ids.extend(ids)
-            offset  += limit
+            offset += limit
             if offset >= total_count:
                 break
 
@@ -158,7 +158,7 @@ class Wipe():
             f = '/api/1.0/subnets/%s/' % obj_id
             url = D42_URL + f
             r = requests.delete(url, headers=self.headers, verify=False)
-            i+=1
+            i += 1
 
     def delete_assets(self):
         """
@@ -172,7 +172,7 @@ class Wipe():
             url = '/api/1.0/assets/?offset=%s' % offset
             ids, offset, limit, total_count = self.get(url, 'asset_id', 'assets')
             all_ids.extend(ids)
-            offset  += limit
+            offset += limit
             if offset >= total_count:
                 break
 
@@ -183,7 +183,7 @@ class Wipe():
             f = '/api/1.0/assets/%s/' % obj_id
             url = D42_URL + f
             r = requests.delete(url, headers=self.headers, verify=False)
-            i+=1
+            i += 1
 
     def delete_hardwares(self):
         """
@@ -197,7 +197,7 @@ class Wipe():
             url = '/api/1.0/hardwares/?offset=%s' % offset
             ids, offset, limit, total_count = self.get(url, 'hardware_id', 'models')
             all_ids.extend(ids)
-            offset  += limit
+            offset += limit
             if offset >= total_count:
                 break
 
@@ -208,7 +208,7 @@ class Wipe():
             f = '/api/1.0/hardwares/%s/' % obj_id
             url = D42_URL + f
             r = requests.delete(url, headers=self.headers, verify=False)
-            i+=1
+            i += 1
 
     def delete_macs(self):
         """
@@ -222,7 +222,7 @@ class Wipe():
             url = '/api/1.0/macs/?offset=%s' % offset
             ids, offset, limit, total_count = self.get(url, 'macaddress_id', 'macaddresses')
             all_ids.extend(ids)
-            offset  += limit
+            offset += limit
             if offset >= total_count:
                 break
 
@@ -233,7 +233,7 @@ class Wipe():
             f = '/api/1.0/macs/%s/' % obj_id
             url = D42_URL + f
             r = requests.delete(url, headers=self.headers, verify=False)
-            i+=1
+            i += 1
 
     def delete_vlans(self):
         """
@@ -247,7 +247,7 @@ class Wipe():
             url = '/api/1.0/vlans/?offset=%s' % offset
             ids, offset, limit, total_count = self.get(url, 'vlan_id', 'vlans')
             all_ids.extend(ids)
-            offset  += limit
+            offset += limit
             if offset >= total_count:
                 break
 
@@ -258,7 +258,7 @@ class Wipe():
             f = '/api/1.0/vlans/%s/' % obj_id
             url = D42_URL + f
             r = requests.delete(url, headers=self.headers, verify=False)
-            i+=1
+            i += 1
 
     def delete_parts(self):
         """
@@ -272,7 +272,7 @@ class Wipe():
             url = '/api/1.0/parts/?offset=%s' % offset
             ids, offset, limit, total_count = self.get(url, 'part_id', 'parts')
             all_ids.extend(ids)
-            offset  += limit
+            offset += limit
             if offset >= total_count:
                 break
 
@@ -283,7 +283,7 @@ class Wipe():
             f = '/api/1.0/parts/%s/' % obj_id
             url = D42_URL + f
             r = requests.delete(url, headers=self.headers, verify=False)
-            i+=1
+            i += 1
 
 
 def print_warning(section):
@@ -293,13 +293,15 @@ def print_warning(section):
     print '!!! WARNING !!!\n'
     response = raw_input("Please Type 'YES' to confirm deletion: ")
     if response == 'YES':
-      return True
+        return True
     else:
-      return False
-    
+        return False
+
+
 def cancel():
     print '\nCancelled'
     sys.exit()
+
 
 def main():
     w = Wipe()
