@@ -320,7 +320,7 @@ def print_warning(section, args=None):
     if args.file:
         print '\n'
         print '!!! WARNING !!!\n'
-        print "This WILL Delete all %s ids that present in file %s\n" % (section, args.file)
+        print "This WILL Delete all %s ids that presents in file %s\n" % (section, args.file)
         print '!!! WARNING !!!\n'
     else:
         print '\n'
@@ -353,7 +353,7 @@ def main():
     parser.add_argument('-v', '--vlans', action="store_true", help='Delete all VLANs')
     parser.add_argument('-t', '--parts', action="store_true", help='Delete all parts')
     parser.add_argument('-a', '--all', action="store_true", help='Delete EVERYTHING')
-    parser.add_argument('-f', '--file', nargs='?', help='Get IDS from file')
+    parser.add_argument('-f', '--file', nargs='?', help='Get IDS from supplied file')
     args = parser.parse_args()
 
     ids_to_remove = []
