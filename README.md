@@ -5,20 +5,34 @@ Run deleter.py. It fetchest the IDs for objects using the GET call and deletes t
 
 # Possible Options
 '-r', '--racks', `Delete all Racks`
+
 '-b', '--buildings', `Delete all Buildings`
+
 '-p', '--pdus', `Delete all PDUs`
+
 '-s', '--subnets', `Delete all Subnets`
+
 '-d', '--devices', `Delete all Devices`
+
 '-i', '--assets', `Delete all Assets`
+
 '-w', '--hardwares', `Delete all Hardwares`
+
 '-m', '--macs',`Delete all MACs`
+
 '-v', '--vlans', `Delete all VLANs`
+
 '-t', '--parts', `Delete all parts`
+
 '-a', '--all', `Delete EVERYTHING`
+
 '-f', '--file' `Get IDS from supplied file`
 
 # Examples of use
 `python deleter.py --racks` - delete all racks.
+
 `python deleter.py --buildings` - delete all buildings.
+
 `python deleter.py --racks --file ids.csv` - delete racks by ids from ids.csv file.
+
 `python deleter.py --all` - delete all possible objects.
