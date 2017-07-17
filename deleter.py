@@ -231,6 +231,34 @@ class Wipe():
             r = requests.delete(url, headers=self.headers, verify=False)
             i += 1
 
+    def delete_ips(self, ids_to_remove):
+        """
+        Deletes ips
+        :return:
+        """
+        if len(ids_to_remove) > 0:
+            all_ids = ids_to_remove
+        else:
+            all_ids = []
+            offset = 0
+            print '\n[!] Deleting ips'
+            while 1:
+                url = '/api/1.0/ips/?offset=%s' % offset
+                ids, offset, limit, total_count = self.get(url, 'id', 'ips')
+                all_ids.extend(ids)
+                offset += limit
+                if offset >= total_count:
+                    break
+
+        total = len(all_ids)
+        i = 1
+        for obj_id in all_ids:
+            print '\t[-] Ip ID: %s [%d of %d]' % (obj_id, i, total)
+            f = '/api/1.0/ips/%s/' % obj_id
+            url = D42_URL + f
+            r = requests.delete(url, headers=self.headers, verify=False)
+            i += 1
+
     def delete_macs(self, ids_to_remove):
         """
         Deleting macs one at the time. Very slow!
@@ -349,6 +377,7 @@ def main():
     parser.add_argument('-d', '--devices', action="store_true", help='Delete all Devices')
     parser.add_argument('-i', '--assets', action="store_true", help='Delete all Assets')
     parser.add_argument('-w', '--hardwares', action="store_true", help='Delete all Hardwares')
+    parser.add_argument('-n', '--ips', action="store_true", help='Delete all IPs')
     parser.add_argument('-m', '--macs', action="store_true", help='Delete all MACs')
     parser.add_argument('-v', '--vlans', action="store_true", help='Delete all VLANs')
     parser.add_argument('-t', '--parts', action="store_true", help='Delete all parts')
@@ -413,6 +442,12 @@ def main():
             if print_warning("hardwares", args.file):
                 print '\n Deleting hardwares'
                 w.delete_hardwares(ids_to_remove)
+            else:
+                cancel()
+        if args.ips:
+            if print_warning("ips", args.file):
+                print '\n Deleting ips'
+                w.delete_ips(ids_to_remove)
             else:
                 cancel()
         if args.macs:
