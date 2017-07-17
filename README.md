@@ -18,6 +18,8 @@ Run deleter.py. It fetchest the IDs for objects using the GET call and deletes t
 
 '-w', '--hardwares', `Delete all Hardwares`
 
+'-n', '--ips',`Delete all IPs`
+
 '-m', '--macs',`Delete all MACs`
 
 '-v', '--vlans', `Delete all VLANs`
