@@ -8,9 +8,9 @@ try:
 except:
     pass
 
-D42_USER = 'admin'
-D42_PWD = 'adm!nd42'
-D42_URL = 'https://10.10.0.32'
+D42_USER = 'username'
+D42_PWD = 'p@ass'
+D42_URL = 'https://fqdn'
 
 
 class Wipe():
