@@ -316,11 +316,11 @@ class Wipe():
             i += 1
 
 
-def print_warning(section, args=None):
-    if args.file:
+def print_warning(section, file=None):
+    if file:
         print '\n'
         print '!!! WARNING !!!\n'
-        print "This WILL Delete all %s ids that presents in file %s\n" % (section, args.file)
+        print "This WILL Delete all %s ids that presents in file %s\n" % (section, file)
         print '!!! WARNING !!!\n'
     else:
         print '\n'
@@ -374,61 +374,61 @@ def main():
         print parser.print_help()
     else:
         if args.racks:
-            if print_warning("racks", args):
+            if print_warning("racks", args.file):
                 print '\n Deleting Racks ...'
                 w.delete_racks(ids_to_remove)
             else:
                 cancel()
         if args.buildings:
-            if print_warning("buildings", args):
+            if print_warning("buildings", args.file):
                 print '\n Deleting Buildings'
                 w.delete_buildings(ids_to_remove)
             else:
                 cancel()
         if args.pdus:
-            if print_warning("pdus", args):
+            if print_warning("pdus", args.file):
                 print '\n Deleting PDUs'
                 w.delete_pdus(ids_to_remove)
             else:
                 cancel()
         if args.subnets:
-            if print_warning("subnets", args):
+            if print_warning("subnets", args.file):
                 print '\n Deleting Subnets'
                 w.delete_subnets(ids_to_remove)
             else:
                 cancel()
         if args.devices:
-            if print_warning("devices", args):
+            if print_warning("devices", args.file):
                 print '\n Deleting Devices'
                 w.delete_devices(ids_to_remove)
             else:
                 cancel()
         if args.assets:
-            if print_warning("assets", args):
+            if print_warning("assets", args.file):
                 print '\n Deleting Assets'
                 w.delete_assets(ids_to_remove)
             else:
                 cancel()
         if args.hardwares:
-            if print_warning("hardwares", args):
+            if print_warning("hardwares", args.file):
                 print '\n Deleting hardwares'
                 w.delete_hardwares(ids_to_remove)
             else:
                 cancel()
         if args.macs:
-            if print_warning("MACs", args):
+            if print_warning("MACs", args.file):
                 print '\n Deleting MACs'
                 w.delete_macs(ids_to_remove)
             else:
                 cancel()
         if args.vlans:
-            if print_warning("VLANs", args):
+            if print_warning("VLANs", args.file):
                 print '\n Deleting VLANs'
                 w.delete_vlans(ids_to_remove)
             else:
                 cancel()
         if args.parts:
-            if print_warning("parts", args):
+            if print_warning("parts", args.file):
                 print '\n Deleting parts'
                 w.delete_parts(ids_to_remove)
             else:
