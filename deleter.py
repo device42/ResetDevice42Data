@@ -138,7 +138,7 @@ class Wipe():
                 if offset >= total_count:
                     break
 
-        total = len(all_ids, ids_to_remove)
+        total = len(all_ids)
         i = 1
         for obj_id in all_ids:
             print '\t[-] PDU ID: %s [%d of %d]' % (obj_id, i, total)
