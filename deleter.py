@@ -11,12 +11,14 @@ except:
 D42_USER = 'username'
 D42_PWD = 'p@ass'
 D42_URL = 'https://fqdn'
-
+DATA_STR = D42_USER + ':' + D42_PWD
+DATA_BYTES = DATA_STR.encode("utf-8")
+AUTH_STR = base64.b64encode(DATA_BYTES)
 
 class Wipe():
     def __init__(self):
         self.headers = {
-            'Authorization': 'Basic ' + base64.b64encode(D42_USER + ':' + D42_PWD),
+            'Authorization': 'Basic ' + AUTH_STR.decode(),
             'Content-Type': 'application/x-www-form-urlencoded'
         }
 
@@ -45,7 +47,7 @@ class Wipe():
         else:
             all_ids = []
             offset = 0
-            print '\n[!] Deleting devices'
+            print ('\n[!] Deleting devices')
             while 1:
                 url = '/api/1.0/devices/?offset=%s' % offset
                 ids, offset, limit, total_count = self.get(url, 'device_id', 'Devices')
@@ -57,7 +59,7 @@ class Wipe():
         total = len(all_ids)
         i = 1
         for obj_id in all_ids:
-            print '\t[-] Device ID: %s [%d of %d]' % (obj_id, i, total)
+            print ('\t[-] Device ID: %s [%d of %d]' % (obj_id, i, total))
             f = '/api/1.0/devices/%s/' % obj_id
             url = D42_URL + f
             r = requests.delete(url, headers=self.headers, verify=False)
@@ -73,7 +75,7 @@ class Wipe():
         else:
             all_ids = []
             offset = 0
-            print '\n[!] Deleting racks'
+            print ('\n[!] Deleting racks')
             while 1:
                 url = '/api/1.0/racks/?offset=%s' % offset
                 ids, offset, limit, total_count = self.get(url, 'rack_id', 'racks')
@@ -85,7 +87,7 @@ class Wipe():
         total = len(all_ids)
         i = 1
         for obj_id in all_ids:
-            print '\t[-] Rack ID: %s [%d of %d]' % (obj_id, i, total)
+            print ('\t[-] Rack ID: %s [%d of %d]' % (obj_id, i, total))
             f = '/api/1.0/racks/%s/' % obj_id
             url = D42_URL + f
             r = requests.delete(url, headers=self.headers, verify=False)
@@ -101,7 +103,7 @@ class Wipe():
         else:
             all_ids = []
             offset = 0
-            print '\n[!] Deleting buildings'
+            print ('\n[!] Deleting buildings')
             while 1:
                 url = '/api/1.0/buildings/?offset=%s' % offset
                 ids, offset, limit, total_count = self.get(url, 'building_id', 'buildings')
@@ -113,7 +115,7 @@ class Wipe():
         total = len(all_ids)
         i = 1
         for obj_id in all_ids:
-            print '\t[-] Building ID: %s [%d of %d]' % (obj_id, i, total)
+            print ('\t[-] Building ID: %s [%d of %d]' % (obj_id, i, total))
             f = '/api/1.0/buildings/%s/' % obj_id
             url = D42_URL + f
             r = requests.delete(url, headers=self.headers, verify=False)
@@ -129,7 +131,7 @@ class Wipe():
         else:
             all_ids = []
             offset = 0
-            print '\n[!] Deleting PDUs'
+            print ('\n[!] Deleting PDUs')
             while 1:
                 url = '/api/1.0/pdus/?offset=%s' % offset
                 ids, offset, limit, total_count = self.get(url, 'pdu_id', 'pdus')
@@ -141,7 +143,7 @@ class Wipe():
         total = len(all_ids)
         i = 1
         for obj_id in all_ids:
-            print '\t[-] PDU ID: %s [%d of %d]' % (obj_id, i, total)
+            print ('\t[-] PDU ID: %s [%d of %d]' % (obj_id, i, total))
             f = '/api/1.0/pdus/%s/' % obj_id
             url = D42_URL + f
             r = requests.delete(url, headers=self.headers, verify=False)
@@ -157,7 +159,7 @@ class Wipe():
         else:
             all_ids = []
             offset = 0
-            print '\n[!] Deleting subnets'
+            print ('\n[!] Deleting subnets')
             while 1:
                 url = '/api/1.0/subnets/?offset=%s' % offset
                 ids, offset, limit, total_count = self.get(url, 'subnet_id', 'subnets')
@@ -169,7 +171,7 @@ class Wipe():
         total = len(all_ids)
         i = 1
         for obj_id in all_ids:
-            print '\t[-] Subnet ID: %s [%d of %d]' % (obj_id, i, total)
+            print ('\t[-] Subnet ID: %s [%d of %d]' % (obj_id, i, total))
             f = '/api/1.0/subnets/%s/' % obj_id
             url = D42_URL + f
             r = requests.delete(url, headers=self.headers, verify=False)
@@ -185,7 +187,7 @@ class Wipe():
         else:
             all_ids = []
             offset = 0
-            print '\n[!] Deleting assets'
+            print ('\n[!] Deleting assets')
             while 1:
                 url = '/api/1.0/assets/?offset=%s' % offset
                 ids, offset, limit, total_count = self.get(url, 'asset_id', 'assets')
@@ -197,7 +199,7 @@ class Wipe():
         total = len(all_ids)
         i = 1
         for obj_id in all_ids:
-            print '\t[-] Asset ID: %s [%d of %d]' % (obj_id, i, total)
+            print ('\t[-] Asset ID: %s [%d of %d]' % (obj_id, i, total))
             f = '/api/1.0/assets/%s/' % obj_id
             url = D42_URL + f
             r = requests.delete(url, headers=self.headers, verify=False)
@@ -213,7 +215,7 @@ class Wipe():
         else:
             all_ids = []
             offset = 0
-            print '\n[!] Deleting hardwares'
+            print ('\n[!] Deleting hardwares')
             while 1:
                 url = '/api/1.0/hardwares/?offset=%s' % offset
                 ids, offset, limit, total_count = self.get(url, 'hardware_id', 'models')
@@ -225,7 +227,7 @@ class Wipe():
         total = len(all_ids)
         i = 1
         for obj_id in all_ids:
-            print '\t[-] Hardware ID: %s [%d of %d]' % (obj_id, i, total)
+            print ('\t[-] Hardware ID: %s [%d of %d]' % (obj_id, i, total))
             f = '/api/1.0/hardwares/%s/' % obj_id
             url = D42_URL + f
             r = requests.delete(url, headers=self.headers, verify=False)
@@ -241,7 +243,7 @@ class Wipe():
         else:
             all_ids = []
             offset = 0
-            print '\n[!] Deleting ips'
+            print ('\n[!] Deleting ips')
             while 1:
                 url = '/api/1.0/ips/?offset=%s' % offset
                 ids, offset, limit, total_count = self.get(url, 'id', 'ips')
@@ -253,7 +255,7 @@ class Wipe():
         total = len(all_ids)
         i = 1
         for obj_id in all_ids:
-            print '\t[-] Ip ID: %s [%d of %d]' % (obj_id, i, total)
+            print ('\t[-] Ip ID: %s [%d of %d]' % (obj_id, i, total))
             f = '/api/1.0/ips/%s/' % obj_id
             url = D42_URL + f
             r = requests.delete(url, headers=self.headers, verify=False)
@@ -269,7 +271,7 @@ class Wipe():
         else:
             all_ids = []
             offset = 0
-            print '\n[!] Deleting MACs'
+            print ('\n[!] Deleting MACs')
             while 1:
                 url = '/api/1.0/macs/?offset=%s' % offset
                 ids, offset, limit, total_count = self.get(url, 'macaddress_id', 'macaddresses')
@@ -281,7 +283,7 @@ class Wipe():
         total = len(all_ids)
         i = 1
         for obj_id in all_ids:
-            print '\t[-] MAC ID: %s [%d of %d]' % (obj_id, i, total)
+            print ('\t[-] MAC ID: %s [%d of %d]' % (obj_id, i, total))
             f = '/api/1.0/macs/%s/' % obj_id
             url = D42_URL + f
             r = requests.delete(url, headers=self.headers, verify=False)
@@ -297,7 +299,7 @@ class Wipe():
         else:
             all_ids = []
             offset = 0
-            print '\n[!] Deleting VLANs'
+            print ('\n[!] Deleting VLANs')
             while 1:
                 url = '/api/1.0/vlans/?offset=%s' % offset
                 ids, offset, limit, total_count = self.get(url, 'vlan_id', 'vlans')
@@ -309,7 +311,7 @@ class Wipe():
         total = len(all_ids)
         i = 1
         for obj_id in all_ids:
-            print '\t[-] VLAN ID: %s [%d of %d]' % (obj_id, i, total)
+            print ('\t[-] VLAN ID: %s [%d of %d]' % (obj_id, i, total))
             f = '/api/1.0/vlans/%s/' % obj_id
             url = D42_URL + f
             r = requests.delete(url, headers=self.headers, verify=False)
@@ -325,7 +327,7 @@ class Wipe():
         else:
             all_ids = []
             offset = 0
-            print '\n[!] Deleting parts'
+            print ('\n[!] Deleting parts')
             while 1:
                 url = '/api/1.0/parts/?offset=%s' % offset
                 ids, offset, limit, total_count = self.get(url, 'part_id', 'parts')
@@ -337,7 +339,7 @@ class Wipe():
         total = len(all_ids)
         i = 1
         for obj_id in all_ids:
-            print '\t[-] Part ID: %s [%d of %d]' % (obj_id, i, total)
+            print ('\t[-] Part ID: %s [%d of %d]' % (obj_id, i, total))
             f = '/api/1.0/parts/%s/' % obj_id
             url = D42_URL + f
             r = requests.delete(url, headers=self.headers, verify=False)
@@ -346,16 +348,16 @@ class Wipe():
 
 def print_warning(section, file=None):
     if file:
-        print '\n'
-        print '!!! WARNING !!!\n'
-        print "This WILL Delete all %s ids that presents in file %s\n" % (section, file)
-        print '!!! WARNING !!!\n'
+        print ('\n')
+        print ('!!! WARNING !!!\n')
+        print ("This WILL Delete all %s ids that presents in file %s\n" % (section, file))
+        print ('!!! WARNING !!!\n')
     else:
-        print '\n'
-        print '!!! WARNING !!!\n'
-        print "This WILL Delete all of your %s\n" % (section)
-        print '!!! WARNING !!!\n'
-    response = raw_input("Please Type 'YES' to confirm deletion: ")
+        print ('\n')
+        print ('!!! WARNING !!!\n')
+        print ("This WILL Delete all of your %s\n" % (section))
+        print ('!!! WARNING !!!\n')
+    response = input("Please Type 'YES' to confirm deletion: ")
     if response == 'YES':
         return True
     else:
@@ -363,7 +365,7 @@ def print_warning(section, file=None):
 
 
 def cancel():
-    print '\nCancelled'
+    print ('\nCancelled')
     sys.exit()
 
 
@@ -387,7 +389,7 @@ def main():
 
     ids_to_remove = []
     if args.file and args.all:
-        print 'Argument --file not allowed to use with --all'
+        print ('Argument --file not allowed to use with --all')
         sys.exit()
 
     if args.file:
@@ -396,81 +398,81 @@ def main():
             for line in open(args.file, 'r').readlines():
                 ids_to_remove.append(line.replace('\n', ''))
         except TypeError:
-            print 'Error with file open'
+            print ('Error with file open')
             sys.exit()
 
     if len(sys.argv) == 1:
-        print parser.print_help()
+        print (parser.print_help())
     else:
         if args.racks:
             if print_warning("racks", args.file):
-                print '\n Deleting Racks ...'
+                print ('\n Deleting Racks ...')
                 w.delete_racks(ids_to_remove)
             else:
                 cancel()
         if args.buildings:
             if print_warning("buildings", args.file):
-                print '\n Deleting Buildings'
+                print ('\n Deleting Buildings')
                 w.delete_buildings(ids_to_remove)
             else:
                 cancel()
         if args.pdus:
             if print_warning("pdus", args.file):
-                print '\n Deleting PDUs'
+                print ('\n Deleting PDUs')
                 w.delete_pdus(ids_to_remove)
             else:
                 cancel()
         if args.subnets:
             if print_warning("subnets", args.file):
-                print '\n Deleting Subnets'
+                print ('\n Deleting Subnets')
                 w.delete_subnets(ids_to_remove)
             else:
                 cancel()
         if args.devices:
             if print_warning("devices", args.file):
-                print '\n Deleting Devices'
+                print ('\n Deleting Devices')
                 w.delete_devices(ids_to_remove)
             else:
                 cancel()
         if args.assets:
             if print_warning("assets", args.file):
-                print '\n Deleting Assets'
+                print ('\n Deleting Assets')
                 w.delete_assets(ids_to_remove)
             else:
                 cancel()
         if args.hardwares:
             if print_warning("hardwares", args.file):
-                print '\n Deleting hardwares'
+                print ('\n Deleting hardwares')
                 w.delete_hardwares(ids_to_remove)
             else:
                 cancel()
         if args.ips:
             if print_warning("ips", args.file):
-                print '\n Deleting ips'
+                print ('\n Deleting ips')
                 w.delete_ips(ids_to_remove)
             else:
                 cancel()
         if args.macs:
             if print_warning("MACs", args.file):
-                print '\n Deleting MACs'
+                print ('\n Deleting MACs')
                 w.delete_macs(ids_to_remove)
             else:
                 cancel()
         if args.vlans:
             if print_warning("VLANs", args.file):
-                print '\n Deleting VLANs'
+                print ('\n Deleting VLANs')
                 w.delete_vlans(ids_to_remove)
             else:
                 cancel()
         if args.parts:
             if print_warning("parts", args.file):
-                print '\n Deleting parts'
+                print ('\n Deleting parts')
                 w.delete_parts(ids_to_remove)
             else:
                 cancel()
         if args.all:
             if print_warning("EVERYTHING"):
-                print '\n DELETING EVERYTHING ...'
+                print ('\n DELETING EVERYTHING ...')
                 w.delete_racks(ids_to_remove)
                 w.delete_buildings(ids_to_remove)
                 w.delete_pdus(ids_to_remove)
@@ -487,5 +489,5 @@ def main():
 
 if __name__ == '__main__':
     main()
-    print '\n[!] Done!\n\n'
+    print ('\n[!] Done!\n\n')
     sys.exit()
