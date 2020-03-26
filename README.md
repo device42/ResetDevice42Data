@@ -30,6 +30,8 @@ Run deleter.py. It fetchest the IDs for objects using the GET call and deletes t
 
 '-f', '--file' `Get IDS from supplied file`
 
+'-e', '--serviceinstance, `Delete all Service Instances`
+
 # Examples of use
 `python deleter.py --racks` - delete all racks.
 
