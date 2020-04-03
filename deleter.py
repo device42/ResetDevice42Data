@@ -1,5 +1,5 @@
 import sys
-import requests
+import requests  
 import base64
 import argparse
 
@@ -344,6 +344,35 @@ class Wipe():
             url = D42_URL + f
             r = requests.delete(url, headers=self.headers, verify=False)
             i += 1
+			
+    def delete_serviceinstances(self, ids_to_remove):
+        """
+		Added - 03/24/2020 - Not part of Wipe all
+        Deleting service instances (si) one at the time. Very slow!
+        :return:
+        """
+        if len(ids_to_remove) > 0:
+            all_ids = ids_to_remove
+        else:
+            all_ids = []
+            offset = 0
+            print ('\n[!] Deleting service instances')
+            while 1:
+                url = '/api/2.0/service_instances/?offset=%s' % offset
+                ids, offset, limit, total_count = self.get(url, 'service_detail_id', 'service_details')
+                all_ids.extend(ids)
+                offset += limit
+                if offset >= total_count:
+                    break
+
+        total = len(all_ids)
+        i = 1
+        for obj_id in all_ids:
+            print ('\t[-] Service Instance ID: %s [%d of %d]' % (obj_id, i, total))
+            f = '/api/2.0/service_instances/%s/' % obj_id
+            url = D42_URL + f
+            r = requests.delete(url, headers=self.headers, verify=False)
+            i += 1			
 
 
 def print_warning(section, file=None):
@@ -385,6 +414,7 @@ def main():
     parser.add_argument('-t', '--parts', action="store_true", help='Delete parts')
     parser.add_argument('-a', '--all', action="store_true", help='Delete EVERYTHING')
     parser.add_argument('-f', '--file', nargs='?', help='Get IDS from supplied file')
+    parser.add_argument('-e', '--serviceinstances', action="store_true", help='Delete Service Instances')	
     args = parser.parse_args()
 
     ids_to_remove = []
@@ -470,6 +500,12 @@ def main():
                 w.delete_parts(ids_to_remove)
             else:
                 cancel()
+        if args.serviceinstances:
+            if print_warning("serviceinstances", args.file):
+                print ('\n Deleting serviceinstances')
+                w.delete_serviceinstances(ids_to_remove)
+            else:
+                cancel()				
         if args.all:
             if print_warning("EVERYTHING"):
                 print ('\n DELETING EVERYTHING ...')
