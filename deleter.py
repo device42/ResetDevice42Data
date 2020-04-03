@@ -359,7 +359,7 @@ class Wipe():
             print ('\n[!] Deleting service instances')
             while 1:
                 url = '/api/2.0/service_instances/?offset=%s' % offset
-                ids, offset, limit, total_count = self.get(url, 'serviceinstance_id', 'Service Instances')
+                ids, offset, limit, total_count = self.get(url, 'service_detail_id', 'service_details')
                 all_ids.extend(ids)
                 offset += limit
                 if offset >= total_count:
@@ -414,7 +414,7 @@ def main():
     parser.add_argument('-t', '--parts', action="store_true", help='Delete parts')
     parser.add_argument('-a', '--all', action="store_true", help='Delete EVERYTHING')
     parser.add_argument('-f', '--file', nargs='?', help='Get IDS from supplied file')
-    parser.add_argument('-e', '--serviceinstance', action="store_true", help='Delete Service Instances')	
+    parser.add_argument('-e', '--serviceinstances', action="store_true", help='Delete Service Instances')	
     args = parser.parse_args()
 
     ids_to_remove = []
@@ -500,7 +500,7 @@ def main():
                 w.delete_parts(ids_to_remove)
             else:
                 cancel()
-        if args.serviceinstance:
+        if args.serviceinstances:
             if print_warning("serviceinstances", args.file):
                 print ('\n Deleting serviceinstances')
                 w.delete_serviceinstances(ids_to_remove)
